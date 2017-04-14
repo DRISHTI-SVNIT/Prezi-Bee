@@ -1,0 +1,13 @@
+C:\Users\simran\Documents\Visual Studio 2013\Projects\myproject\myproject\bin\Debug\myproject.exe.config
+C:\Users\simran\Documents\Visual Studio 2013\Projects\myproject\myproject\bin\Debug\myproject.exe
+C:\Users\simran\Documents\Visual Studio 2013\Projects\myproject\myproject\bin\Debug\myproject.pdb
+C:\Users\simran\Documents\Visual Studio 2013\Projects\myproject\myproject\obj\Debug\myproject.csprojResolveAssemblyReference.cache
+C:\Users\simran\Documents\Visual Studio 2013\Projects\myproject\myproject\obj\Debug\MainWindow.baml
+C:\Users\simran\Documents\Visual Studio 2013\Projects\myproject\myproject\obj\Debug\MainWindow.g.cs
+C:\Users\simran\Documents\Visual Studio 2013\Projects\myproject\myproject\obj\Debug\App.g.cs
+C:\Users\simran\Documents\Visual Studio 2013\Projects\myproject\myproject\obj\Debug\myproject_MarkupCompile.cache
+C:\Users\simran\Documents\Visual Studio 2013\Projects\myproject\myproject\obj\Debug\myproject.g.resources
+C:\Users\simran\Documents\Visual Studio 2013\Projects\myproject\myproject\obj\Debug\myproject.Properties.Resources.resources
+C:\Users\simran\Documents\Visual Studio 2013\Projects\myproject\myproject\obj\Debug\myproject.csproj.GenerateResource.Cache
+C:\Users\simran\Documents\Visual Studio 2013\Projects\myproject\myproject\obj\Debug\myproject.exe
+C:\Users\simran\Documents\Visual Studio 2013\Projects\myproject\myproject\obj\Debug\myproject.pdb
