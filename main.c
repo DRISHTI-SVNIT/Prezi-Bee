@@ -10,6 +10,7 @@
 #define  F_CPU 1000000UL
 #include <util/delay.h>
 #include <stdint.h>
+#include <avr/io.h>
 
 typedef struct kf
 {
@@ -18,7 +19,7 @@ typedef struct kf
 	float x; //value
 	float p; //estimation error covariance
 	float k; //kalman gain
-}kalman_state;
+}kalman_state;										//Struct for Kalman Filter variables
 
 
 int ACCEL_XOUT;
@@ -54,17 +55,14 @@ float Get_Accel_X();
 float Get_Accel_Y();
 float Get_Accel_Z();
 
-#include <avr/io.h>
-
-
 int main(void)
 {
 	USART_TransmitString("GO");
-	USART_Init(6);
-	TWIinit();
+	USART_Init(6);                       //Setting Baud rate as 9600
+	TWIinit();					
 	MPU_setup();
 	Acceleration_config();
-	kalman_init(statex,0.125,32,1023,0);  //initialise Kalman
+	kalman_init(statex,0.125,32,1023,0);  //Initialising Kalman Variables
 	kalman_init(statey,0.125,32,1023,0);
 	kalman_init(statez,0.125,32,1023,0);
 	for(int i=0;i<50;i++)
@@ -73,8 +71,8 @@ int main(void)
 		kalman_update(statex, Get_Accel_X());
 		kalman_update(statey, Get_Accel_Y());
 		kalman_update(statez, Get_Accel_Z());
-	}
-	USART_TransmitString("OKAY!");
+	}									//Feeding Kalman filter initial values
+	USART_TransmitString("OKAY!");		//Setting up done
 	while(1)
 	{
 		int i=0;
@@ -90,7 +88,7 @@ int main(void)
 			if(i==1)
 			{
 			
-				if(diffx>7)// && (diffy < 0.2 && diffy > -0.2))   //Left  && (diffz<0.2 && diffz>-0.2)
+				if(diffx>7)// && (diffy < 0.2 && diffy > -0.2))   //Left  && (diffz<0.2 && diffz>-0.2) //Trigger values for change in acceleration wrt time, i.e above this value movement is considered.
 				{	
 					while(diffx>0)
 					{
@@ -198,13 +196,13 @@ int main(void)
 }
 
 
-void Acceleration_config()
+void Acceleration_config()											//Removing initial zero error, device should be kept horizontal initially
 {
 	
 	float ACCEL_XOFFSETSUM=0,ACCEL_YOFFSETSUM=0, ACCEL_ZOFFSETSUM=0;
 	for(int i =0;i<100;i++)
 	{
-		ACCEL_XOFFSETSUM +=Get_Accel_Y();
+		ACCEL_XOFFSETSUM +=Get_Accel_Y();							
 		ACCEL_YOFFSETSUM +=Get_Accel_Y();
 		ACCEL_ZOFFSETSUM += Get_Accel_Z();
 	}
@@ -214,12 +212,12 @@ void Acceleration_config()
 	ACCEL_YOFFSET=ACCEL_YOFFSETSUM/100.0;
 }
 
-void MPU_setup()
+void MPU_setup()									//Setting up MPU
 {
-	TWITransmit(0x68,0x6B,0x00);
+	TWITransmit(0x68,0x6B,0x00); //Internal clock, High power mode //To do: Disable temp sensor, put in low power mode
 	TWITransmit(0x68,0x6C,0x00);
-	TWITransmit(0x68,0x1B,0x18);
-	TWITransmit(0x68,0x19,0x00);
+	TWITransmit(0x68,0x1B,0x18);//Gyro range 2000/s // To do : acc configuratio
+	TWITransmit(0x68,0x19,0x00);//Sample rate dividor
 }
 
 float Get_Accel_X()
@@ -228,7 +226,7 @@ float Get_Accel_X()
 	ACCEL_XOUT = ACCEL_XOUT<<8;
 	ACCEL_XOUT |= TWIReadNack(0x68,0x3C);
 	float a= ((float)ACCEL_XOUT/16384)-ACCEL_XOFFSET;
-	return a; //***************************Not updating Kalman
+	return a; 
 }
 
 float Get_Accel_Y()
@@ -238,7 +236,6 @@ float Get_Accel_Y()
 	ACCEL_YOUT = ACCEL_YOUT<<8;
 	ACCEL_YOUT |= TWIReadNack(0x68,0x3E);
 	float a=(float)ACCEL_YOUT/(16384)-ACCEL_YOFFSET;
-	//kalman_update(statey, a);
 	return a;
 }
 
@@ -248,7 +245,6 @@ float Get_Accel_Z()
 	ACCEL_ZOUT = ACCEL_YOUT<<8;
 	ACCEL_ZOUT |= TWIReadNack(0x68,0x40);
 	float a = (float)ACCEL_ZOUT/(16384)-ACCEL_ZOFFSET;
-	//kalman_update(statez, a);
 	return a;
 }
 
@@ -271,4 +267,4 @@ void kalman_update(kalman_state *state, float measurement)
 	state->k=state->p/(state->p + state->r);
 	state->x=state->x+state->k*(measurement-state->x);
 	state->p=(1-state->k)*state->p;
-}
+} // Updates Kalman Filter
